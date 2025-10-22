@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service //automatically creates an instance(bean) and can be injected wherever we need
+//This class contains business logic. Please create a single shared instance of it (a bean) and keep it ready for me
+
 public class EmployeeService {
 
     private List<EmployeeDTO> employees = new ArrayList<>();

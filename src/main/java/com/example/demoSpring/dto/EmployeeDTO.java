@@ -1,5 +1,7 @@
 package com.example.demoSpring.dto;
 
+//carries data between layers
+
 public class EmployeeDTO {
     private int id;
     private String name;
@@ -15,7 +17,6 @@ public class EmployeeDTO {
         this.salary = salary;
     }
 
-    // Getters and setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
