@@ -1,6 +1,3 @@
-//service = bean create and stores them in the application context
-//autowired = bean inject
-
 package com.example.demoSpring.controller;
 
 import com.example.demoSpring.dto.EmployeeDTO;
@@ -11,44 +8,52 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController //handles REST API calls, automatically converts EmployeeDTO into JSON
-@RequestMapping("/employees") //Base URL for all endpoints
+@RestController
+@RequestMapping("/employees")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
 
-    @Autowired //don't have to manually create instances/objects for EmployeeService
+    @Autowired
     private EmployeeService service;
-    //private EmployeeService service = new EmployeeService(); manually creating without SpringBoot
-    //If multiple classes depend on EmployeeService, each one creates a new copy — wasting memory.
-    //I already have an object of EmployeeService in my container — let me inject it here
 
-    @GetMapping
-    public List<EmployeeDTO> getAllEmployees() {
-        return service.getAllEmployees();
+    @Operation(summary = "Fetch paginated employees",
+            description = "Uses PostgreSQL function get_employees_sadhwika_crud()")
+
+    @GetMapping("/page/{pageNum}/size/{pageSize}")
+    public List<EmployeeDTO> getPaginatedEmployees(@PathVariable int pageNum, @PathVariable int pageSize) {
+//        System.out.println("Fetching employees for pageNum=" + pageNum + ", pageSize=" + pageSize);
+        return service.getPaginatedEmployees(pageNum, pageSize);
     }
 
-    @Operation(summary="This gives list of all the Employees", description="returns list of all Employees")
+    @Operation(summary = "Fetch employee by ID",
+            description = "Fetch single employee record by ID")
 
-    @GetMapping("/{id}") //extracts id from the URL
+    @GetMapping("/{id}")
     public EmployeeDTO getEmployeeById(@PathVariable int id) {
         return service.getEmployeeById(id);
     }
 
-    @Operation(summary="You can add new employee data here", description="add new employees")
-
+    @Operation(summary = "Add new employee",
+            description = "Calls PostgreSQL function add_employee_sadhwika_crud()")
 
     @PostMapping
-    public EmployeeDTO addEmployee(@RequestBody EmployeeDTO employee) {
-        return service.addEmployee(employee);
+    public String addEmployee(@RequestBody EmployeeDTO emp) {
+        return service.addEmployee(emp);
     }
 
-    @PutMapping("/{id}")
-    public EmployeeDTO updateEmployee(@PathVariable int id, @RequestBody EmployeeDTO employee) {
-        return service.updateEmployee(id, employee);
+    @Operation(summary = "Update employee",
+            description = "Calls PostgreSQL function update_employee_sadhwika_crud()")
+
+    @PutMapping
+    public String updateEmployee(@RequestBody EmployeeDTO emp) {
+        return service.updateEmployee(emp);
     }
+
+    @Operation(summary = "Delete employee by ID",
+            description = "Calls PostgreSQL function delete_employee_sadhwika_crud()")
 
     @DeleteMapping("/{id}")
     public String deleteEmployee(@PathVariable int id) {
-        boolean deleted = service.deleteEmployee(id);
-        return deleted ? "Employee deleted successfully!" : "Employee not found!";
+        return service.deleteEmployee(id);
     }
 }
