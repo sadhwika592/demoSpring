@@ -26,12 +26,15 @@ public class EmployeeController {
         return service.getAllEmployees();
     }
 
-    @Operation(summary="This gives lst of all the Employees", description="returns list of all Employees")
+    @Operation(summary="This gives list of all the Employees", description="returns list of all Employees")
 
     @GetMapping("/{id}") //extracts id from the URL
     public EmployeeDTO getEmployeeById(@PathVariable int id) {
         return service.getEmployeeById(id);
     }
+
+    @Operation(summary="You can add new employee data here", description="add new employees")
+
 
     @PostMapping
     public EmployeeDTO addEmployee(@RequestBody EmployeeDTO employee) {

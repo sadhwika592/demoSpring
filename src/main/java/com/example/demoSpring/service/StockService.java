@@ -14,7 +14,6 @@ public class StockService {
     private static final String USER = "endeavour_test_area";
     private static final String PASS = "Endeavour01";
 
-    // ---------- GET with Pagination ----------
     public List<StockDTO> getPaginatedStocks(int pageNum, int pageSize) {
         List<StockDTO> stocks = new ArrayList<>();
         int offset = (pageNum - 1) * pageSize;
@@ -46,7 +45,6 @@ public class StockService {
         return stocks;
     }
 
-    // ---------- POST (Insert Stock) ----------
     public String addStock(StockDTO stock) {
         String sql = "INSERT INTO endeavour_test_area.stocks_sadhwika (stock_name, symbol, price) VALUES (?, ?, ?)";
 
