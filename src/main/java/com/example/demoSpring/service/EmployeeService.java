@@ -1,19 +1,20 @@
 package com.example.demoSpring.service;
 
 import com.example.demoSpring.dto.EmployeeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class EmployeeService {
 
-    @Autowired
-    private DataSource dataSource;
+    private final DataSource dataSource;
+
+    // Manual constructor injection
+    public EmployeeService(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public List<EmployeeDTO> getPaginatedEmployees(int pageNum, int pageSize) {
         List<EmployeeDTO> list = new ArrayList<>();
@@ -82,7 +83,6 @@ public class EmployeeService {
         }
         return message;
     }
-
 
     public String updateEmployee(EmployeeDTO emp) {
         String message;

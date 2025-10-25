@@ -2,58 +2,68 @@ package com.example.demoSpring.controller;
 
 import com.example.demoSpring.dto.EmployeeDTO;
 import com.example.demoSpring.service.EmployeeService;
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sql.DataSource;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/employees")
 @CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService service;
+    private final EmployeeService service;
 
-    @Operation(summary = "Fetch paginated employees",
-            description = "Uses PostgreSQL function get_employees_sadhwika_crud()")
+    public EmployeeController(DataSource dataSource) {
+        this.service = new EmployeeService(dataSource);
+    }
 
-    @GetMapping("/page/{pageNum}/size/{pageSize}")
-    public List<EmployeeDTO> getPaginatedEmployees(@PathVariable int pageNum, @PathVariable int pageSize) {
-//        System.out.println("Fetching employees for pageNum=" + pageNum + ", pageSize=" + pageSize);
+    @RequestMapping(method = RequestMethod.GET, path = "/getPaginatedEmployees")
+    @ResponseBody
+    public List<EmployeeDTO> getPaginatedEmployees(
+            @RequestParam int pageNum,
+            @RequestParam int pageSize) {
         return service.getPaginatedEmployees(pageNum, pageSize);
     }
 
-    @Operation(summary = "Fetch employee by ID",
-            description = "Fetch single employee record by ID")
-
-    @GetMapping("/{id}")
-    public EmployeeDTO getEmployeeById(@PathVariable int id) {
+    @RequestMapping(method = RequestMethod.GET, path = "/getEmployee")
+    @ResponseBody
+    public EmployeeDTO getEmployeeById(@RequestParam int id) {
         return service.getEmployeeById(id);
     }
 
-    @Operation(summary = "Add new employee",
-            description = "Calls PostgreSQL function add_employee_sadhwika_crud()")
-
-    @PostMapping
-    public String addEmployee(@RequestBody EmployeeDTO emp) {
+    @RequestMapping(method = RequestMethod.POST, path = "/SaveEmployee")
+    @ResponseBody
+    public String addEmployee(@RequestParam int id,
+                              @RequestParam String name,
+                              @RequestParam String department,
+                              @RequestParam double salary) {
+        EmployeeDTO emp = new EmployeeDTO();
+        emp.setId(id);
+        emp.setName(name);
+        emp.setDepartment(department);
+        emp.setSalary(salary);
         return service.addEmployee(emp);
     }
 
-    @Operation(summary = "Update employee",
-            description = "Calls PostgreSQL function update_employee_sadhwika_crud()")
-
-    @PutMapping
-    public String updateEmployee(@RequestBody EmployeeDTO emp) {
+    @RequestMapping(method = RequestMethod.PUT, path = "/UpdateEmployee")
+    @ResponseBody
+    public String updateEmployee(@RequestParam int id,
+                                 @RequestParam String name,
+                                 @RequestParam String department,
+                                 @RequestParam double salary) {
+        EmployeeDTO emp = new EmployeeDTO();
+        emp.setId(id);
+        emp.setName(name);
+        emp.setDepartment(department);
+        emp.setSalary(salary);
         return service.updateEmployee(emp);
     }
 
-    @Operation(summary = "Delete employee by ID",
-            description = "Calls PostgreSQL function delete_employee_sadhwika_crud()")
-
-    @DeleteMapping("/{id}")
-    public String deleteEmployee(@PathVariable int id) {
+    @RequestMapping(method = RequestMethod.DELETE, path = "/DeleteEmployee")
+    @ResponseBody
+    public String deleteEmployee(@RequestParam int id) {
         return service.deleteEmployee(id);
     }
 }
